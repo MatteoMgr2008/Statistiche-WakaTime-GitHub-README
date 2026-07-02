@@ -278,9 +278,11 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
     .filter((language) => language.hours || language.minutes)
         .slice(0, langsCount);
 
+    // Translate "Other" language name if present in the filtered languages
     filteredLanguages.forEach((language) => {
+        // Check if the language name is "Other"
         if (language.name === "Other") {
-            language.name = i18n.t("wakatimecard.other");
+            language.name = i18n.t("wakatimecard.other"); // Translate "Other" to the appropriate language
         }
     });
 
