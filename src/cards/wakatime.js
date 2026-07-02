@@ -276,7 +276,13 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
 
   const filteredLanguages = languages
     .filter((language) => language.hours || language.minutes)
-    .slice(0, langsCount);
+        .slice(0, langsCount);
+
+    filteredLanguages.forEach((language) => {
+        if (language.name === "Other") {
+            language.name = i18n.t("wakatimecard.other");
+        }
+    });
 
   // Calculate the card height depending on how many items there are
   // but if rank circle is visible clamp the minimum height to `150`
