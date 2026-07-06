@@ -42,18 +42,60 @@ const noCodingActivityNode = ({ color, text }) => {
  */
 
 /**
+ * Format a duration (hours/minutes/seconds) into a localized string,
+ * instead of relying on WakaTime's English-only "text" field.
+ *
+ * @param {Object} args The function arguments.
+ * @param {number=} args.hours Number of hours.
+ * @param {number=} args.minutes Number of minutes.
+ * @param {number=} args.seconds Number of seconds.
+ * @param {import('../common/I18n').I18n} args.i18n The I18n instance.
+ * @returns {string} The localized duration string.
+ */
+
+const formatDuration = ({ hours = 0, minutes = 0, seconds = 0, i18n }) => {
+  const parts = [];
+
+  if (hours > 0) {
+    parts.push(
+      `${hours} ${hours === 1 ? i18n.t("wakatimecard.hr") : i18n.t("wakatimecard.hrs")}`,
+    );
+  }
+
+  if (minutes > 0 || hours > 0) {
+    parts.push(
+      `${minutes} ${minutes === 1 ? i18n.t("wakatimecard.min") : i18n.t("wakatimecard.mins")}`,
+    );
+  }
+
+  if (hours === 0 && minutes === 0) {
+    parts.push(
+      `${seconds} ${seconds === 1 ? i18n.t("wakatimecard.sec") : i18n.t("wakatimecard.secs")}`,
+    );
+  }
+
+  return parts.join(" ");
+};
+
+/**
  * Format language value.
  *
  * @param {Object} args The function arguments.
  * @param {WakaTimeLang} args.lang The language object.
  * @param {"time" | "percent"} args.display_format The display format of the language node.
+ * @param {import('../common/I18n').I18n} args.i18n The I18n instance.
  * @returns {string} The formatted language value.
  */
 
-const formatLanguageValue = ({ display_format, lang }) => {
+const formatLanguageValue = ({ display_format, lang, i18n }) => {
   return display_format === "percent"
     ? `${lang.percent.toFixed(2).toString()} %`
-    : lang.text;
+    : formatDuration({
+        hours: lang.hours,
+        minutes: lang.minutes,
+        seconds: lang.seconds,
+        i18n,
+      });
 };
 
 /**
@@ -67,9 +109,9 @@ const formatLanguageValue = ({ display_format, lang }) => {
  * @returns {string} The compact layout language SVG node.
  */
 
-const createCompactLangNode = ({ lang, x, y, display_format }) => {
+const createCompactLangNode = ({ lang, x, y, display_format, i18n }) => {
   const color = languageColors[lang.name] || "#858585";
-  const value = formatLanguageValue({ display_format, lang });
+  const value = formatLanguageValue({ display_format, lang, i18n });
 
   return `
     <g transform="translate(${x}, ${y})">
@@ -91,7 +133,7 @@ const createCompactLangNode = ({ lang, x, y, display_format }) => {
  * @returns {string[]} The language text node items.
  */
 
-const createLanguageTextNode = ({ langs, y, display_format }) => {
+const createLanguageTextNode = ({ langs, y, display_format, i18n }) => {
   return langs.map((lang, index) => {
     if (index % 2 === 0) {
       return createCompactLangNode({
@@ -99,6 +141,7 @@ const createLanguageTextNode = ({ langs, y, display_format }) => {
         x: 25,
         y: 12.5 * index + y,
         display_format,
+        i18n,
       });
     }
     return createCompactLangNode({
@@ -106,6 +149,7 @@ const createLanguageTextNode = ({ langs, y, display_format }) => {
       x: 230,
       y: 12.5 + 12.5 * index,
       display_format,
+      i18n,
     });
   });
 };
@@ -350,6 +394,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
               y: 25,
               langs: filteredLanguages,
               display_format,
+              i18n,
             }).join("")
           : noCodingActivityNode({
               // @ts-ignore
@@ -369,7 +414,11 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
             return createTextNode({
               id: language.name,
               label: language.name,
-              value: formatLanguageValue({ display_format, lang: language }),
+              value: formatLanguageValue({
+                display_format,
+                lang: language,
+                i18n,
+              }),
               index,
               percent: language.percent,
               // @ts-ignore
