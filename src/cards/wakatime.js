@@ -17,6 +17,7 @@ import { wakatimeCardLocales } from "../translations.js";
  * since vercel is using v16.14.0 which does not yet support json imports without the
  * --experimental-json-modules flag.
  */
+
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const languageColors = require("../common/languageColors.json"); // now works
@@ -29,6 +30,7 @@ const languageColors = require("../common/languageColors.json"); // now works
  * @param {string} props.text No coding activity translated text.
  * @returns {string} No coding activity SVG node string.
  */
+
 const noCodingActivityNode = ({ color, text }) => {
   return `
     <text x="25" y="11" class="stat bold" fill="${color}">${text}</text>
@@ -47,6 +49,7 @@ const noCodingActivityNode = ({ color, text }) => {
  * @param {"time" | "percent"} args.display_format The display format of the language node.
  * @returns {string} The formatted language value.
  */
+
 const formatLanguageValue = ({ display_format, lang }) => {
   return display_format === "percent"
     ? `${lang.percent.toFixed(2).toString()} %`
@@ -63,6 +66,7 @@ const formatLanguageValue = ({ display_format, lang }) => {
  * @param {"time" | "percent"} args.display_format The display format of the language node.
  * @returns {string} The compact layout language SVG node.
  */
+
 const createCompactLangNode = ({ lang, x, y, display_format }) => {
   const color = languageColors[lang.name] || "#858585";
   const value = formatLanguageValue({ display_format, lang });
@@ -86,6 +90,7 @@ const createCompactLangNode = ({ lang, x, y, display_format }) => {
  * @param {"time" | "percent"} args.display_format The display format of the language node.
  * @returns {string[]} The language text node items.
  */
+
 const createLanguageTextNode = ({ langs, y, display_format }) => {
   return langs.map((lang, index) => {
     if (index % 2 === 0) {
@@ -119,6 +124,7 @@ const createLanguageTextNode = ({ langs, y, display_format }) => {
  * @param {string} args.progressBarBackgroundColor The color of the progress bar background.
  * @returns {string} The text SVG node.
  */
+
 const createTextNode = ({
   id,
   label,
@@ -165,6 +171,7 @@ const createTextNode = ({
  * @param {WakaTimeLang[]} languages The languages array.
  * @returns {void} The recalculated languages array.
  */
+
 const recalculatePercentages = (languages) => {
   const totalSum = languages.reduce(
     (totalSum, language) => totalSum + language.percent,
@@ -184,6 +191,7 @@ const recalculatePercentages = (languages) => {
  * @param {string} colors.textColor The text color.
  * @returns {string} Card CSS styles.
  */
+
 const getStyles = ({
   // eslint-disable-next-line no-unused-vars
   titleColor,
@@ -218,6 +226,7 @@ const getStyles = ({
  * @param {Partial<WakaTimeOptions>} options Card options.
  * @returns {string} WakaTime card SVG.
  */
+
 const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
   let { languages = [] } = stats;
   const {

@@ -115,4 +115,7 @@ export type WakaTimeLang = {
   name: string;
   text: string;
   percent: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
 };
