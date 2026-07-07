@@ -35,6 +35,7 @@ const RANK_ONLY_CARD_DEFAULT_WIDTH = 290;
  * @param {string} createTextNodeParams.number_format The format of numbers on card.
  * @returns {string} The stats card text item SVG object.
  */
+
 const createTextNode = ({
   icon,
   label,
@@ -81,6 +82,7 @@ const createTextNode = ({
  * @param {number} value The rank value to calculate progress for.
  * @returns {number} Progress value.
  */
+
 const calculateCircleProgress = (value) => {
   const radius = 40;
   const c = Math.PI * (radius * 2);
@@ -102,6 +104,7 @@ const calculateCircleProgress = (value) => {
  * @param {{progress: number}} progress The progress value to animate to.
  * @returns {string} Progress animation css.
  */
+
 const getProgressAnimation = ({ progress }) => {
   return `
     @keyframes rankAnimation {
@@ -127,6 +130,7 @@ const getProgressAnimation = ({ progress }) => {
  * @param {number} colors.progress The progress value to animate to.
  * @returns {string} Card CSS styles.
  */
+
 const getStyles = ({
   // eslint-disable-next-line no-unused-vars
   titleColor,
@@ -199,6 +203,7 @@ const getStyles = ({
  * @param {Partial<StatCardOptions>} options The card options.
  * @returns {string} The stats card SVG object.
  */
+
 const renderStatsCard = (stats, options = {}) => {
   const {
     name,
@@ -373,8 +378,11 @@ const renderStatsCard = (stats, options = {}) => {
         id: STATS[key].id,
         unitSymbol: STATS[key].unitSymbol,
         index,
-        showIcons: show_icons,
-        shiftValuePos: 79.01 + (isLongLocale ? 50 : 0),
+          showIcons: show_icons,
+          shiftValuePos:
+              79.01 +
+              (isLongLocale ? 50 : 0) +
+              (key === "contribs" && locale === "it" ? 40 : 0),
         bold: text_bold,
         number_format,
       }),
@@ -420,6 +428,7 @@ const renderStatsCard = (stats, options = {}) => {
     When hide_rank=false, the minimum card_width is 340 px + the icon width (if show_icons=true).
     Numbers are picked by looking at existing dimensions on production.
   */
+
   const iconWidth = show_icons && statItems.length ? 16 + /* padding */ 1 : 0;
   const minCardWidth =
     (hide_rank
@@ -481,6 +490,7 @@ const renderStatsCard = (stats, options = {}) => {
    *
    * @returns {number} - Rank circle translation value.
    */
+
   const calculateRankXTranslation = () => {
     if (statItems.length) {
       const minXTranslation = RANK_CARD_MIN_WIDTH + iconWidth - 70;
