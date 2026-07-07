@@ -378,7 +378,7 @@ const renderStatsCard = (stats, options = {}) => {
         id: STATS[key].id,
         unitSymbol: STATS[key].unitSymbol,
         index,
-          showIcons: show_icons,
+        showIcons: show_icons,
           shiftValuePos:
               79.01 +
               (isLongLocale ? 50 : 0) +
