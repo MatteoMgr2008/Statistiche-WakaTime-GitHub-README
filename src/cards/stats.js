@@ -379,10 +379,7 @@ const renderStatsCard = (stats, options = {}) => {
         unitSymbol: STATS[key].unitSymbol,
         index,
         showIcons: show_icons,
-          shiftValuePos:
-              79.01 +
-              (isLongLocale ? 50 : 0) +
-              (key === "contribs" && locale === "it" ? 40 : 0),
+        shiftValuePos: 79.01 + (isLongLocale ? 50 : 0),
         bold: text_bold,
         number_format,
       }),
